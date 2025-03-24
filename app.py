@@ -4,6 +4,7 @@ import pytesseract
 import cv2
 import numpy as np
 import concurrent.futures  # For parallel execution
+import os
 
 app = Flask(__name__)
 
@@ -39,4 +40,5 @@ def solve_captcha_endpoint():
     return jsonify({'captcha_text': captcha_text})
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=5000)
+   port = int(os.environ.get("PORT", 5000))  # Render assigns a dynamic port
+app.run(host="0.0.0.0", port=port, threaded=True)
