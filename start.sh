@@ -1,9 +1,10 @@
 #!/bin/bash
-# Update package lists
-apt-get update
 
-# Install Tesseract OCR
-apt-get install -y tesseract-ocr
+# Ensure pip is updated
+pip install --upgrade pip
 
-# Start the Flask app with Gunicorn
+# Install dependencies from requirements.txt
+pip install -r requirements.txt
+
+# Start the app using Gunicorn
 gunicorn app:app --bind 0.0.0.0:5000
