@@ -3,8 +3,8 @@ from PIL import Image
 import pytesseract
 import cv2
 import numpy as np
-import concurrent.futures  # For parallel execution
-import os
+import concurrent.futures
+import os  # Import os to access environment variables
 
 app = Flask(__name__)
 
@@ -23,22 +23,23 @@ def solve_captcha(image):
 
 @app.route('/solve_captcha', methods=['POST'])
 def solve_captcha_endpoint():
-    file = request.files.get('image')  # Accept a single image per request
+    file = request.files.get('image')
 
     if not file:
         return jsonify({"error": "No file provided"}), 400
 
-    # Convert the uploaded file into an image
+    # Convert uploaded file to an image
     image = Image.open(file.stream)
     image_np = np.array(image)
 
-    # Use ThreadPoolExecutor to process the CAPTCHA asynchronously
+    # Process the CAPTCHA asynchronously
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future = executor.submit(solve_captcha, image_np)
         captcha_text = future.result()
 
     return jsonify({'captcha_text': captcha_text})
 
+# Ensure Render uses the correct PORT
 if __name__ == '__main__':
-  port = int(os.environ.get("PORT", 5000))  # Default to 5000 if PORT is not set
-app.run(host="0.0.0.0", port=port, threaded=True)
+    port = int(os.environ.get("PORT", 5000))  # Use PORT from Render, default to 5000
+    app.run(host="0.0.0.0", port=port, threaded=True)
