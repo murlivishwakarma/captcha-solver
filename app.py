@@ -7,6 +7,9 @@ import concurrent.futures
 import os  # Import os to access environment variables
 
 app = Flask(__name__)
+@app.route('/')
+def home():
+    return jsonify({"message": "CAPTCHA solver is running!"})
 
 # Function to preprocess the image for better OCR results
 def preprocess_image(image):
