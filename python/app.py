@@ -5,13 +5,11 @@ import numpy as np
 import pytesseract
 from PIL import Image
 import concurrent.futures  # Allows parallel execution
-import sys
+
 app = Flask(__name__)
 
-# Set Tesseract Path
-#pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
-
+# Set Tesseract Path (Make sure this path is correct for your environment)
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Correct path for Azure Linux environment
 
 # Function to preprocess image
 def preprocess_image(image):
@@ -42,6 +40,7 @@ def solve_captcha_endpoint():
 
     return jsonify({"captcha_text": captcha_text})
 
+# Make sure the app listens on the correct port for Azure (use dynamic PORT variable)
 if __name__ == "__main__":
-      
-        app.run(host="127.0.0.1", port=4000, threaded=True)  # ✅ Supports multiple requests
+    port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set by Azure
+    app.run(host="0.0.0.0", port=port, threaded=True)  # ✅ Supports multiple requests
